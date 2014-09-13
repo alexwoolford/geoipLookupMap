@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <title>Geoip Lookup</title>
+
+      <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.js') }}"</script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"</script>
+
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse" role="navigation">
+
+      <div class="container-fluid">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">GeoIP Lookup</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/loadData">Load Data</a></li>
+            <li class="active"><a href="/viewMap">View Map</a></li>
+          </ul>
+
+        </div>
+
+      </div><!-- /.navbar-collapse -->
+
+    </nav> 
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+  </body>
+
+</html>
