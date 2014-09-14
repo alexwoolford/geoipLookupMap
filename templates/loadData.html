@@ -5,11 +5,20 @@
 <form role="form" action="{{ url_for('loadData') }}" method="post">
   <div class="form-group">
     <label for="ipAddressBox">IP Addresses</label>
-    
-    <textarea id="ipAddressBox" name="ipAddressBox" class="form-control" rows="3"></textarea>
+    <textarea id="ipAddressBox" name="ipAddressBox" class="form-control" rows="10"></textarea>
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 </div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="well">
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
 {% endblock %}

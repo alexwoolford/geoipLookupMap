@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="well">
+<table class="table table-striped">
+  <thead>
+    <th>ip</th>
+    <th>org</th>
+    <th>city</th>
+    <th>postcode</th>
+    <th>subdivision</th>
+    <th>country</th>
+    <th>isp</th>
+  </thead>
+  <tbody>
+  {% if geoipAttributes %}
+    {% for key, value in geoipAttributes.iteritems() %}
+		<tr>
+      <td>{{ key }}</td>
+      <td>{{ value['org'] }}</td>
+      <td>{{ value['city'] }}</td>
+      <td>{{ value['postcode'] }}</td>
+      <td>{{ value['subdivision'] }}</td>
+      <td>{{ value['country'] }}</td>
+      <td>{{ value['isp'] }}<td>
+    </tr>
+	{% endfor %}
+  {% endif %}
+  </tbody>
+</table>
+</div>
+
+{% endblock %}

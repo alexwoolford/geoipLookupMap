@@ -16,14 +16,23 @@ def loadData():
         ips = request.form['ipAddressBox'].split()
         geoipAttributes = dict()
         for ip in ips:
-            geoipAttributes[ip] = getGeoipAttributes(ip)
-        return render_template('viewMap.html', geoipAttributes=geoipAttributes)
-    if request.method == 'GET':
-        return render_template('loadData.html')
+            try:
+                geoipAttributes[ip] = getGeoipAttributes(ip)
+            except:
+                flash('An error occurred processing IP ' + ip)
+        session['geoipAttributes'] = geoipAttributes
+        flash('Geolocated ' + str(len(geoipAttributes)) + ' IP addresses.')
+    return render_template('loadData.html')
 
 @app.route('/viewMap', methods = ['GET', 'POST'])
-def viewMap(geoipAttributes = None):
+def viewMap():
+    geoipAttributes = session['geoipAttributes']
     return render_template('viewMap.html', geoipAttributes=geoipAttributes)
+
+@app.route('/viewTable', methods = ['GET', 'POST'])
+def viewTable():
+    geoipAttributes = session['geoipAttributes']
+    return render_template('viewTable.html', geoipAttributes=geoipAttributes)
 
 readerCity = geoip2.database.Reader('GeoIP2-City.mmdb')
 readerISP = geoip2.database.Reader('GeoIP2-ISP.mmdb')
@@ -31,7 +40,7 @@ readerISP = geoip2.database.Reader('GeoIP2-ISP.mmdb')
 def getGeoipAttributes(ip):
     responseCity = readerCity.city(ip)
     responseISP = readerISP.omni(ip)
-    return {'lat':responseCity.location.latitude, 'long':responseCity.location.longitude, 'city':responseCity.city.name, 'postCode':responseCity.postal.code, 'org':responseISP.raw['organization'], 'isp':responseISP.raw['isp']}
+    return {'lat':responseCity.location.latitude, 'long':responseCity.location.longitude, 'city':responseCity.city.name, 'postcode':responseCity.postal.code, 'subdivision':responseCity.subdivisions.most_specific.name, 'country':responseCity.country.name, 'org':responseISP.raw['organization'], 'isp':responseISP.raw['isp']}
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -23,7 +23,7 @@
 
   {% if geoipAttributes %}
     {% for key, value in geoipAttributes.iteritems() %}
-		var popup = L.popup().setLatLng([{{ value['lat'] }}, {{ value['long'] }}]).setContent("org: {{ value['org'] }}").addTo(map);
+		var popup = L.popup().setLatLng([{{ value['lat'] }}, {{ value['long'] }}]).setContent("{{ key }}<br>{{ value['org'] }}").addTo(map);
 	{% endfor %}
   {% endif %}
 
