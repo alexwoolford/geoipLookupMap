@@ -1,7 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 from flask import Flask, render_template, url_for, flash, request, session
 import geoip2.database
+
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 app = Flask(__name__)
 app.secret_key = '42'
@@ -39,9 +43,13 @@ readerISP = geoip2.database.Reader('GeoIP2-ISP.mmdb')
 
 def getGeoipAttributes(ip):
     responseCity = readerCity.city(ip)
-    responseISP = readerISP.omni(ip)
-    return {'lat':responseCity.location.latitude, 'long':responseCity.location.longitude, 'city':responseCity.city.name, 'postcode':responseCity.postal.code, 'subdivision':responseCity.subdivisions.most_specific.name, 'country':responseCity.country.name, 'org':responseISP.raw['organization'], 'isp':responseISP.raw['isp']}
+    responseISP = readerISP.isp(ip)
+    return {'lat':responseCity.raw[u'location'][u'latitude'], 'long':responseCity.raw[u'location'][u'longitude'], \
+            'city':responseCity.raw[u'city'][u'names'][u'en'], 'postcode':responseCity.raw[u'postal'][u'code'], \
+            'subdivision':responseCity.raw[u'subdivisions'][0][u'names'][u'en'], \
+            'country':responseCity.raw[u'country'][u'names'][u'en'], 'org':readerISP.isp(ip).__dict__['organization'], \
+            'isp':readerISP.isp(ip).__dict__['isp']}
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host="0.0.0.0")
 
